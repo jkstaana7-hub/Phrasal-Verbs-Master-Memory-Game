@@ -3,175 +3,509 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Phrasal Verb Talking Robot V4</title>
+  <title>Phrasal Verb Talking Robot V5</title>
   <style>
-    *{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#e3f2ff,#fff3e0,#e8ffe8);min-height:100vh;color:#10213f;display:flex;align-items:center;justify-content:center;padding:18px}.app{width:min(1100px,100%);background:#fff;border-radius:28px;box-shadow:0 20px 60px rgba(0,0,0,.15);padding:24px;border:4px solid #d9ecff}.title{text-align:center;margin:0;color:#2456c9;font-size:clamp(30px,5vw,54px)}.subtitle{text-align:center;margin:8px 0 20px;font-size:clamp(16px,2vw,22px);color:#44506a}.grid{display:grid;grid-template-columns:340px 1fr;gap:22px}.panel{border:2px solid #d9e8ff;border-radius:22px;padding:18px;background:#fbfdff}.robotBox{text-align:center}.robot{width:220px;height:220px;margin:10px auto 20px;background:linear-gradient(#83ddff,#50a8f7);border:7px solid #2857c8;border-radius:40px;position:relative}.robot:before{content:"";position:absolute;top:-66px;left:94px;width:12px;height:66px;background:#2857c8}.robot:after{content:"";position:absolute;top:-80px;left:81px;width:38px;height:38px;border-radius:50%;background:#ffd548;border:5px solid #2857c8}.eye{position:absolute;top:62px;width:48px;height:48px;border-radius:50%;background:white;border:5px solid #2857c8}.eye.left{left:48px}.eye.right{right:48px}.eye span{display:block;width:20px;height:20px;background:#123456;border-radius:50%;margin:9px auto}.mouth{position:absolute;left:58px;right:58px;bottom:58px;height:36px;background:#123456;border-radius:0 0 36px 36px}.robot.speaking{animation:bob .5s infinite alternate}.robot.listening{box-shadow:0 0 0 10px rgba(33,150,243,.18),0 0 30px #2196f3}@keyframes bob{from{transform:translateY(0)}to{transform:translateY(-8px)}}button{border:0;border-radius:18px;padding:15px 22px;font-weight:800;font-size:17px;color:white;cursor:pointer;box-shadow:0 9px 18px rgba(0,0,0,.15);margin:6px}.start{background:#2e5bd1}.stop{background:#ef4050}.test{background:#22aa66}.clear{background:#3277ee}.small{font-size:14px;color:#5d6b82;line-height:1.45}.row{display:grid;grid-template-columns:170px 1fr;gap:10px;align-items:center;margin:10px 0}.label{font-weight:900;color:#2456c9}.value{background:#f2f6ff;border:2px solid #d5e5ff;border-radius:14px;padding:12px;font-weight:700;min-height:48px}.task{background:#fff8dc;border-color:#ffd65a;font-size:22px}.heard{background:#eafff1;border-color:#99efbd;color:#08703b;font-size:24px}.keyword{background:#eef4ff}.log{height:205px;overflow:auto;background:#f7fbff;border:2px solid #d5e5ff;border-radius:18px;padding:14px;line-height:1.45;font-weight:700}.robotLine{color:#2456c9;margin:8px 0}.studentLine{color:#07833c;margin:8px 0}.systemLine{color:#a15b00;margin:8px 0}.footer{margin-top:14px;background:#fff8ef;border:2px solid #ffd7a3;border-radius:18px;padding:14px;color:#516070}.progress{height:14px;background:#e9eef7;border-radius:20px;overflow:hidden;margin-top:8px}.bar{height:100%;width:0%;background:#2e5bd1;transition:.4s}.score{font-size:22px;font-weight:900;color:#2456c9;text-align:center;margin-top:12px}@media(max-width:850px){body{padding:8px}.grid{grid-template-columns:1fr}.robot{width:190px;height:190px}.row{grid-template-columns:1fr}.app{padding:14px}.log{height:170px}}
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial, sans-serif;
+      background:linear-gradient(135deg,#e0f7ff,#fff2e6,#eefce9);
+      color:#102033;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+    }
+    .app{
+      width:min(1050px,100%);
+      background:#ffffffee;
+      border-radius:26px;
+      box-shadow:0 18px 45px rgba(0,0,0,.12);
+      padding:24px;
+      border:3px solid #d8e8ff;
+    }
+    h1{
+      margin:0;
+      text-align:center;
+      color:#2358c9;
+      font-size:clamp(30px,5vw,54px);
+    }
+    .subtitle{text-align:center;font-size:20px;margin:8px 0 22px;color:#3c4a5e}
+    .grid{
+      display:grid;
+      grid-template-columns: 330px 1fr;
+      gap:22px;
+    }
+    .card{
+      border:2px solid #d6e7ff;
+      border-radius:20px;
+      padding:18px;
+      background:#fff;
+    }
+    .robotBox{
+      text-align:center;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
+    }
+    .robot{
+      width:230px;height:230px;border-radius:40px;
+      background:linear-gradient(#8be2ff,#44a7ff);
+      border:8px solid #2657c7;
+      position:relative;
+      margin:30px auto 20px;
+      transition:.2s;
+    }
+    .robot.speaking{transform:scale(1.03); box-shadow:0 0 0 10px #ffe680}
+    .robot.listening{box-shadow:0 0 0 10px #8ff0b3}
+    .robot:before{
+      content:"";position:absolute;left:50%;top:-72px;width:10px;height:72px;background:#2657c7;transform:translateX(-50%);
+    }
+    .robot:after{
+      content:"";position:absolute;left:50%;top:-92px;width:34px;height:34px;background:#ffd842;border:5px solid #2657c7;border-radius:50%;transform:translateX(-50%);
+    }
+    .eye{position:absolute;top:64px;width:54px;height:54px;background:white;border:6px solid #2657c7;border-radius:50%}
+    .eye.left{left:45px}.eye.right{right:45px}
+    .eye:after{content:"";position:absolute;width:22px;height:22px;background:#102033;border-radius:50%;left:10px;top:10px}
+    .mouth{position:absolute;left:58px;bottom:48px;width:105px;height:42px;background:#102033;border-radius:0 0 50px 50px}
+    .buttons{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+    button{
+      border:0;border-radius:18px;padding:15px 22px;font-weight:800;font-size:17px;
+      cursor:pointer;color:white;box-shadow:0 8px 16px rgba(0,0,0,.12);
+    }
+    .start{background:#245bcd}.stop{background:#ef3e4a}.reset{background:#2f80ed}
+    .statusGrid{display:grid;grid-template-columns:170px 1fr;gap:12px;align-items:center}
+    .label{font-weight:800;color:#2358c9}
+    .value{
+      border:2px solid #d8e8ff;border-radius:14px;padding:13px 15px;background:#f6f9ff;
+      font-size:18px;font-weight:700;
+    }
+    .bigSignal{
+      margin:16px 0;
+      border-radius:20px;
+      padding:20px;
+      font-size:30px;
+      text-align:center;
+      font-weight:900;
+      border:3px solid #d8e8ff;
+    }
+    .speakNow{background:#e8fff1;border-color:#63d98d;color:#08753d}
+    .robotTalking{background:#fff7d8;border-color:#ffd34a;color:#8a6200}
+    .thinking{background:#edf3ff;border-color:#7fb0ff;color:#174bb0}
+    .idle{background:#f7f7f7;color:#444}
+    .heard{
+      background:#eafff4;border:2px solid #8ce5b4;border-radius:16px;padding:14px;font-size:26px;font-weight:900;color:#08753d;
+      min-height:66px;
+    }
+    .task{
+      background:#fff9df;border:2px solid #ffcf48;border-radius:16px;padding:14px;font-size:21px;font-weight:900;color:#19314f;
+    }
+    .log{
+      height:220px;overflow:auto;background:#f8fbff;border:2px solid #d6e7ff;border-radius:16px;padding:14px;line-height:1.45;
+      font-size:16px;
+    }
+    .robotLine{color:#2358c9;font-weight:800;margin:8px 0}
+    .studentLine{color:#098045;font-weight:800;margin:8px 0}
+    .hint{font-size:14px;color:#5a6678;line-height:1.35;margin-top:14px}
+    @media(max-width:850px){
+      body{padding:8px}
+      .app{padding:14px}
+      .grid{grid-template-columns:1fr}
+      .statusGrid{grid-template-columns:1fr}
+      .robot{width:190px;height:190px}
+      .eye{top:52px}.eye.left{left:34px}.eye.right{right:34px}.mouth{left:43px;bottom:38px}
+    }
   </style>
 </head>
 <body>
   <main class="app">
-    <h1 class="title">🤖 Phrasal Verb Talking Robot V4</h1>
-    <p class="subtitle">Guided conversation — listens, retries, and continues automatically</p>
+    <h1>🤖 Phrasal Verb Talking Robot</h1>
+    <div class="subtitle">Version 5 — Better Turn-Taking + Longer Student Speaking Time</div>
+
     <section class="grid">
-      <div class="panel robotBox">
-        <div id="robot" class="robot"><div class="eye left"><span></span></div><div class="eye right"><span></span></div><div class="mouth"></div></div>
-        <button class="start" onclick="startRobot()">Start Robot</button>
-        <button class="test" onclick="testMicOnly()">Test Mic</button>
-        <button class="stop" onclick="stopAll()">Stop</button>
-        <button class="clear" onclick="clearLog()">Clear</button>
-        <p class="small">Important: Chrome microphone must be set to your real microphone, not Stereo Mix. Use headphones to avoid the robot hearing itself.</p>
-        <div class="score">Score: <span id="score">0</span> / <span id="total">0</span></div>
-        <div class="progress"><div id="bar" class="bar"></div></div>
+      <div class="card robotBox">
+        <div id="robot" class="robot">
+          <div class="eye left"></div>
+          <div class="eye right"></div>
+          <div class="mouth"></div>
+        </div>
+        <div class="buttons">
+          <button class="start" onclick="startConversation()">Start Robot</button>
+          <button class="stop" onclick="stopAll()">Stop</button>
+          <button class="reset" onclick="resetLesson()">Reset</button>
+        </div>
+        <p class="hint">
+          V5 waits longer before processing. The robot will not answer until the student stops talking or the listening timer ends.
+          Speak in full sentences, for example: <b>I wake up at six.</b>
+        </p>
       </div>
-      <div class="panel">
-        <div class="row"><div class="label">Robot Status</div><div id="robotStatus" class="value">Ready</div></div>
-        <div class="row"><div class="label">Mic Status</div><div id="micStatus" class="value">Waiting</div></div>
-        <div class="row"><div class="label">Current Task</div><div id="task" class="value task">Press Start Robot</div></div>
-        <div class="row"><div class="label">I Heard</div><div id="heard" class="value heard">—</div></div>
-        <div class="row"><div class="label">Keyword Found</div><div id="keyword" class="value keyword">—</div></div>
+
+      <div class="card">
+        <div id="bigSignal" class="bigSignal idle">Ready</div>
+
+        <div class="statusGrid">
+          <div class="label">Robot Status</div><div id="robotStatus" class="value">Idle</div>
+          <div class="label">Mic Status</div><div id="micStatus" class="value">Off</div>
+          <div class="label">Current Task</div><div id="task" class="task">Press Start Robot.</div>
+          <div class="label">I Heard</div><div id="heard" class="heard">—</div>
+          <div class="label">Keyword Found</div><div id="keyword" class="value">—</div>
+        </div>
+
         <h3>Conversation Log</h3>
         <div id="log" class="log"></div>
-        <div class="footer">
-          <b>V4 behavior:</b> If the student gives a partial answer, wrong answer, or silence, the robot repeats and listens again instead of stopping.
-        </div>
       </div>
     </section>
   </main>
+
 <script>
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 let recognition = null;
-let listening = false;
-let running = false;
+let isRunning = false;
+let isSpeaking = false;
+let listenTimer = null;
+let silenceTimer = null;
 let currentStep = 0;
+let finalText = "";
+let interimText = "";
 let retryCount = 0;
-let score = 0;
-let robotVoice = null;
 
 const steps = [
-  { type:'greeting', prompt:'Hello! I am your phrasal verb robot. How are you today?', accept:['fine','good','great','okay','ok','happy','hello','hi'], fallback:'You can say, I am fine, or I am good.' },
-  { type:'ready', prompt:'Great! Today we will practice phrasal verbs. Are you ready?', accept:['yes','ready','ok','okay','sure'], fallback:'Please say yes, I am ready.' },
-  { verb:'wake up', prompt:'First phrasal verb: wake up. What time do you usually wake up?', accept:['wake up','wakeup','woke up'], fallback:'Try a sentence like: I wake up at six.' },
-  { verb:'get up', prompt:'Next phrasal verb: get up. Please say a sentence using get up.', accept:['get up','got up','getting up'], fallback:'Try saying: I get up early.' },
-  { verb:'turn on', prompt:'Next phrasal verb: turn on. What do you turn on in the morning?', accept:['turn on','turned on','turning on'], fallback:'Try saying: I turn on the light.' },
-  { verb:'look for', prompt:'Next phrasal verb: look for. What do you sometimes look for?', accept:['look for','looking for','looked for'], fallback:'Try saying: I look for my pencil.' },
-  { verb:'put on', prompt:'Next phrasal verb: put on. What do you put on before school?', accept:['put on','puts on','putting on'], fallback:'Try saying: I put on my shoes.' },
-  { verb:'clean up', prompt:'Last phrasal verb: clean up. What do you clean up at home?', accept:['clean up','cleaned up','cleaning up'], fallback:'Try saying: I clean up my room.' }
+  {
+    type:"greeting",
+    robot:"Hello! I am your phrasal verb robot. How are you today?",
+    accept:["fine","good","great","okay","ok","happy","hello","hi","how are you"],
+    success:"Nice to hear from you. Today, we will practice phrasal verbs in a short conversation.",
+    retry:"Please say a short greeting, like: I am fine."
+  },
+  {
+    type:"ready",
+    robot:"Are you ready to practice phrasal verbs?",
+    accept:["yes","ready","okay","ok","sure","let's go","i am ready"],
+    success:"Great! Let us begin.",
+    retry:"Please say yes, or say: I am ready."
+  },
+  {
+    type:"phrasal",
+    phrasal:"wake up",
+    robot:"First phrasal verb: wake up. What time do you usually wake up?",
+    success:"Excellent! You used wake up correctly.",
+    retry:"Try again. Please answer using wake up. For example: I wake up at six."
+  },
+  {
+    type:"phrasal",
+    phrasal:"get up",
+    robot:"Next phrasal verb: get up. What do you do after you get up?",
+    success:"Good job! You used get up correctly.",
+    retry:"Please try again using get up. For example: After I get up, I brush my teeth."
+  },
+  {
+    type:"phrasal",
+    phrasal:"turn on",
+    robot:"Next phrasal verb: turn on. What do you turn on when you study?",
+    success:"Excellent sentence! You used turn on correctly.",
+    retry:"Please use turn on. For example: I turn on my computer."
+  },
+  {
+    type:"phrasal",
+    phrasal:"look for",
+    robot:"Next phrasal verb: look for. What do you look for when you lose something?",
+    success:"Great! You used look for correctly.",
+    retry:"Please answer using look for. For example: I look for my pencil."
+  },
+  {
+    type:"end",
+    robot:"Wonderful work! You practiced wake up, get up, turn on, and look for. Great speaking today!",
+    accept:[],
+    success:"",
+    retry:""
+  }
 ];
 
-document.getElementById('total').textContent = steps.filter(s=>s.verb).length;
-
-function $(id){return document.getElementById(id)}
-function setStatus(id,text){$(id).textContent=text}
-function addLog(type,text){const div=document.createElement('div');div.className=type+'Line';div.innerHTML='<b>'+ (type==='robot'?'Robot':type==='student'?'Student':'System') +':</b> '+text;$('log').appendChild(div);$('log').scrollTop=$('log').scrollHeight}
-function setRobotClass(cls){$('robot').className='robot '+(cls||'')}
-function updateProgress(){const total=steps.filter(s=>s.verb).length;$('score').textContent=score;$('bar').style.width=(total?Math.round(score/total*100):0)+'%'}
-
-function chooseVoice(){const voices=speechSynthesis.getVoices();robotVoice = voices.find(v=>/female|zira|samantha|google uk english female/i.test(v.name)) || voices.find(v=>/english/i.test(v.lang)) || voices[0] || null;}
-speechSynthesis.onvoiceschanged=chooseVoice; chooseVoice();
-
-function speak(text, after){
-  stopListeningOnly();
-  setRobotClass('speaking');
-  setStatus('robotStatus','Speaking');
-  setStatus('micStatus','Paused while robot speaks');
-  addLog('robot', text);
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang='en-US'; u.rate=.9; u.pitch=1.05;
-  if(robotVoice) u.voice=robotVoice;
-  u.onend=()=>{setRobotClass(''); setStatus('robotStatus','Waiting for student'); setTimeout(()=>{ if(after) after(); }, 1300)};
-  speechSynthesis.cancel();
-  speechSynthesis.speak(u);
+function $(id){return document.getElementById(id);}
+function logLine(cls, text){
+  const div = document.createElement("div");
+  div.className = cls;
+  div.textContent = text;
+  $("log").appendChild(div);
+  $("log").scrollTop = $("log").scrollHeight;
+}
+function setSignal(text, cls){
+  $("bigSignal").className = "bigSignal " + cls;
+  $("bigSignal").textContent = text;
+}
+function normalize(t){
+  return (t || "").toLowerCase().replace(/[.,!?]/g," ").replace(/\s+/g," ").trim();
 }
 
-function startRobot(){
-  if(!SpeechRecognition){alert('Speech Recognition is not supported in this browser. Please use Chrome.');return}
-  running=true; currentStep=0; retryCount=0; score=0; clearLog(); updateProgress();
-  $('heard').textContent='—'; $('keyword').textContent='—';
-  speak(steps[0].prompt, startListening);
-  $('task').textContent=steps[0].prompt;
-}
+function initRecognition(){
+  if(!SpeechRecognition){
+    $("robotStatus").textContent = "Speech Recognition not supported";
+    $("micStatus").textContent = "Use Chrome";
+    setSignal("Not supported", "idle");
+    return false;
+  }
 
-function testMicOnly(){
-  if(!SpeechRecognition){alert('Speech Recognition is not supported. Use Chrome.');return}
-  running=false; $('task').textContent='Microphone test: say anything.'; $('heard').textContent='Listening...'; $('keyword').textContent='Mic test only'; startListening();
-}
-
-function makeRecognition(){
   recognition = new SpeechRecognition();
-  recognition.lang='en-US';
-  recognition.interimResults=true;
-  recognition.continuous=false;
-  recognition.maxAlternatives=3;
-  recognition.onstart=()=>{listening=true; setRobotClass('listening'); setStatus('micStatus','Listening... speak now'); setStatus('robotStatus','Listening')};
-  recognition.onspeechstart=()=>setStatus('micStatus','Speech detected');
-  recognition.onresult=(event)=>{
-    let interim='', finalText='';
-    for(let i=event.resultIndex;i<event.results.length;i++){
-      const t=event.results[i][0].transcript.trim();
-      if(event.results[i].isFinal) finalText += t + ' '; else interim += t + ' ';
+  recognition.lang = "en-US";
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 1;
+
+  recognition.onstart = () => {
+    $("micStatus").textContent = "Listening... speak now";
+    $("robotStatus").textContent = "Waiting for student";
+    setSignal("🟢 Your Turn — Speak Now", "speakNow");
+    $("robot").classList.add("listening");
+    $("heard").textContent = "Listening...";
+    finalText = "";
+    interimText = "";
+
+    clearTimeout(listenTimer);
+    // Long enough for young learners to finish a sentence.
+    listenTimer = setTimeout(() => {
+      safelyStopRecognition();
+    }, 11000);
+  };
+
+  recognition.onspeechstart = () => {
+    $("micStatus").textContent = "Student is speaking...";
+    setSignal("🎤 Listening to Student...", "speakNow");
+    clearTimeout(silenceTimer);
+  };
+
+  recognition.onspeechend = () => {
+    $("micStatus").textContent = "Student stopped. Waiting briefly...";
+    // Do not answer immediately. Give the student a short chance to continue.
+    clearTimeout(silenceTimer);
+    silenceTimer = setTimeout(() => {
+      safelyStopRecognition();
+    }, 2200);
+  };
+
+  recognition.onresult = (event) => {
+    let interim = "";
+    let finalChunk = "";
+
+    for(let i = event.resultIndex; i < event.results.length; i++){
+      const transcript = event.results[i][0].transcript;
+      if(event.results[i].isFinal){
+        finalChunk += transcript + " ";
+      } else {
+        interim += transcript + " ";
+      }
     }
-    const shown=(finalText || interim).trim();
-    if(shown) $('heard').textContent=shown;
-    if(finalText.trim()) handleStudent(finalText.trim().toLowerCase());
+
+    if(finalChunk.trim()){
+      finalText += finalChunk;
+    }
+    interimText = interim;
+
+    const display = (finalText + " " + interimText).trim();
+    if(display){
+      $("heard").textContent = display;
+    }
   };
-  recognition.onerror=(e)=>{
-    setStatus('micStatus','ERROR: '+e.error);
-    setRobotClass(''); listening=false;
-    if(running && (e.error==='no-speech' || e.error==='aborted')) retrySilence();
+
+  recognition.onerror = (event) => {
+    $("micStatus").textContent = "Error: " + event.error;
+    if(event.error === "no-speech"){
+      finalText = "";
+      interimText = "";
+    }
   };
-  recognition.onend=()=>{listening=false; setRobotClass(''); if($('micStatus').textContent.includes('Listening')) setStatus('micStatus','Stopped listening')};
+
+  recognition.onend = () => {
+    $("robot").classList.remove("listening");
+    clearTimeout(listenTimer);
+    clearTimeout(silenceTimer);
+
+    if(!isRunning || isSpeaking) return;
+
+    $("micStatus").textContent = "Processing answer...";
+    setSignal("🧠 Thinking...", "thinking");
+
+    setTimeout(() => {
+      handleStudentAnswer((finalText + " " + interimText).trim());
+    }, 600);
+  };
+
+  return true;
+}
+
+function speak(text, afterSpeak){
+  if(!isRunning) return;
+  isSpeaking = true;
+  safelyStopRecognition();
+
+  $("robotStatus").textContent = "Speaking";
+  $("micStatus").textContent = "Mic paused while robot speaks";
+  setSignal("🔊 Robot Talking", "robotTalking");
+  $("robot").classList.add("speaking");
+  logLine("robotLine", "Robot: " + text);
+
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = "en-US";
+  utter.rate = 0.88;
+  utter.pitch = 1.05;
+
+  const voices = speechSynthesis.getVoices();
+  const preferred = voices.find(v => /female|zira|jenny|aria|samantha|google us english/i.test(v.name));
+  if(preferred) utter.voice = preferred;
+
+  utter.onend = () => {
+    isSpeaking = false;
+    $("robot").classList.remove("speaking");
+
+    if(afterSpeak){
+      afterSpeak();
+    } else {
+      // Delay prevents the mic from catching the robot's last words.
+      $("robotStatus").textContent = "Preparing to listen";
+      $("micStatus").textContent = "Waiting before listening...";
+      setSignal("⏳ Get Ready to Speak", "thinking");
+      setTimeout(startListening, 1400);
+    }
+  };
+
+  speechSynthesis.cancel();
+  speechSynthesis.speak(utter);
 }
 
 function startListening(){
-  if(!SpeechRecognition) return;
-  if(listening) return;
-  makeRecognition();
-  try{ recognition.start(); }catch(e){ setStatus('micStatus','Start error: '+e.message); }
-}
-function stopListeningOnly(){ if(recognition && listening){ try{recognition.stop()}catch(e){} } listening=false; setRobotClass(''); }
-function stopAll(){ running=false; speechSynthesis.cancel(); stopListeningOnly(); setStatus('robotStatus','Stopped'); setStatus('micStatus','Stopped'); }
-function clearLog(){ $('log').innerHTML=''; $('heard').textContent='—'; $('keyword').textContent='—'; }
-
-function handleStudent(text){
-  stopListeningOnly();
-  $('heard').textContent=text;
-  addLog('student', text);
-  if(!running){ setStatus('micStatus','Final result received'); return; }
-  const step=steps[currentStep];
-  const found=(step.accept||[]).find(k=>text.includes(k));
-  if(found){
-    $('keyword').textContent=found;
-    retryCount=0;
-    if(step.verb){score++; updateProgress();}
-    currentStep++;
-    if(currentStep>=steps.length){
-      speak('Excellent work! You finished the phrasal verb conversation. Your score is '+score+' out of '+steps.filter(s=>s.verb).length+'.');
-      running=false; $('task').textContent='Finished!'; return;
-    }
-    const next=steps[currentStep];
-    $('task').textContent=next.prompt;
-    let praise = step.verb ? 'Great! You used '+step.verb+' correctly. ' : 'Nice answer. ';
-    speak(praise + next.prompt, startListening);
-  }else{
-    $('keyword').textContent='No target keyword found';
-    retryCount++;
-    let msg;
-    if(step.verb){ msg = 'I heard: '+text+'. Good try, but please use the phrasal verb '+step.verb+'. '+step.fallback; }
-    else { msg = 'I heard: '+text+'. '+step.fallback; }
-    if(retryCount>=3){
-      retryCount=0;
-      if(step.verb) msg = 'Let me help you. Please repeat: '+step.fallback.replace('Try saying: ','');
-    }
-    speak(msg, startListening);
+  if(!isRunning || isSpeaking || !recognition) return;
+  try{
+    finalText = "";
+    interimText = "";
+    recognition.start();
+  }catch(e){
+    // Chrome can throw if already started. Try again shortly.
+    setTimeout(() => {
+      try{ recognition.start(); }catch(err){}
+    }, 500);
   }
 }
 
-function retrySilence(){
-  if(!running) return;
-  const step=steps[currentStep];
-  retryCount++;
-  const msg = 'I did not hear anything. '+(step.fallback || 'Please try again.');
-  speak(msg, startListening);
+function safelyStopRecognition(){
+  clearTimeout(listenTimer);
+  clearTimeout(silenceTimer);
+  if(recognition){
+    try{ recognition.stop(); }catch(e){}
+  }
+}
+
+function startConversation(){
+  if(!initRecognition()) return;
+  isRunning = true;
+  currentStep = 0;
+  retryCount = 0;
+  $("log").innerHTML = "";
+  $("keyword").textContent = "—";
+  $("heard").textContent = "—";
+  askCurrentStep();
+}
+
+function resetLesson(){
+  stopAll();
+  currentStep = 0;
+  retryCount = 0;
+  $("log").innerHTML = "";
+  $("task").textContent = "Press Start Robot.";
+  $("heard").textContent = "—";
+  $("keyword").textContent = "—";
+  $("robotStatus").textContent = "Idle";
+  $("micStatus").textContent = "Off";
+  setSignal("Ready", "idle");
+}
+
+function stopAll(){
+  isRunning = false;
+  isSpeaking = false;
+  clearTimeout(listenTimer);
+  clearTimeout(silenceTimer);
+  if(recognition){ try{ recognition.abort(); }catch(e){} }
+  speechSynthesis.cancel();
+  $("robot").classList.remove("speaking","listening");
+  $("robotStatus").textContent = "Stopped";
+  $("micStatus").textContent = "Off";
+  setSignal("Stopped", "idle");
+}
+
+function askCurrentStep(){
+  const step = steps[currentStep];
+  $("task").textContent = step.robot;
+  $("keyword").textContent = step.phrasal ? step.phrasal : "Greeting / response";
+  if(step.type === "end"){
+    speak(step.robot, () => {
+      isRunning = false;
+      $("robotStatus").textContent = "Finished";
+      $("micStatus").textContent = "Off";
+      setSignal("✅ Finished", "speakNow");
+    });
+  } else {
+    speak(step.robot);
+  }
+}
+
+function handleStudentAnswer(raw){
+  if(!isRunning) return;
+
+  const text = normalize(raw);
+  $("heard").textContent = text || "No speech detected";
+
+  if(!text){
+    speak("I did not hear anything. Please try again.");
+    return;
+  }
+
+  logLine("studentLine", "Student: " + text);
+
+  const step = steps[currentStep];
+  let correct = false;
+  let found = "No target keyword found";
+
+  if(step.type === "phrasal"){
+    correct = text.includes(step.phrasal);
+    if(correct) found = step.phrasal;
+  } else {
+    correct = step.accept.some(word => text.includes(word));
+    if(correct) found = "Accepted response";
+  }
+
+  $("keyword").textContent = found;
+
+  if(correct){
+    retryCount = 0;
+    const response = step.success;
+    currentStep++;
+    speak(response + " " + (steps[currentStep]?.type !== "end" ? "Let us continue." : ""), () => {
+      setTimeout(askCurrentStep, 700);
+    });
+  } else {
+    retryCount++;
+    let response;
+    if(step.type === "phrasal"){
+      response = "I heard: " + text + ". Good speaking, but please use the phrasal verb " + step.phrasal + ". " + step.retry;
+    } else {
+      response = "I heard: " + text + ". " + step.retry;
+    }
+
+    // After 3 tries, gently move forward so the activity does not get stuck.
+    if(retryCount >= 3){
+      retryCount = 0;
+      currentStep++;
+      response += " Let's move to the next one.";
+      speak(response, () => setTimeout(askCurrentStep, 700));
+    } else {
+      speak(response);
+    }
+  }
+}
+
+// Load voices on Chrome.
+if("speechSynthesis" in window){
+  speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
 }
 </script>
 </body>
