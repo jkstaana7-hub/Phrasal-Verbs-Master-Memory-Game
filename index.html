@@ -3,275 +3,320 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>V3 Microphone Test Only</title>
+  <title>Phrasal Verb Talking Robot V2</title>
   <style>
     *{box-sizing:border-box}
     body{
       margin:0;
+      font-family:Arial, Helvetica, sans-serif;
       min-height:100vh;
-      font-family:Arial, sans-serif;
-      background:linear-gradient(135deg,#dbeafe,#fef3c7,#dcfce7);
+      background:linear-gradient(135deg,#dff7ff,#f6e9ff,#fff7cf);
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:20px;
-      color:#1f2937;
+      padding:18px;
+      color:#17324d;
     }
     .app{
-      width:min(920px,100%);
-      background:white;
+      width:min(980px,100%);
+      background:rgba(255,255,255,.92);
       border-radius:28px;
-      padding:28px;
-      box-shadow:0 20px 50px rgba(0,0,0,.18);
-      border:4px solid #93c5fd;
+      padding:22px;
+      box-shadow:0 18px 50px rgba(24,43,84,.18);
+      border:3px solid rgba(255,255,255,.9);
     }
-    h1{margin:0 0 8px;text-align:center;font-size:clamp(28px,5vw,46px)}
-    .subtitle{text-align:center;font-size:18px;margin-bottom:24px;color:#4b5563}
-    .robot{
-      font-size:86px;
-      text-align:center;
-      margin:10px 0;
-      animation:float 2s ease-in-out infinite;
-    }
-    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-    .panel{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:16px;
-      margin:20px 0;
-    }
-    .card{
-      background:#f8fafc;
-      border:2px solid #e5e7eb;
-      border-radius:20px;
+    header{text-align:center;margin-bottom:14px}
+    h1{margin:0;font-size:clamp(28px,5vw,48px);color:#2457c5}
+    .tagline{font-size:clamp(16px,2.5vw,22px);margin-top:8px;color:#4d5c77}
+    .grid{display:grid;grid-template-columns:330px 1fr;gap:18px;align-items:stretch}
+    .robot-card,.panel{
+      background:#fff;
+      border-radius:24px;
       padding:18px;
-      min-height:105px;
+      border:2px solid #d9e8ff;
+      box-shadow:0 8px 20px rgba(42,91,170,.10);
     }
-    .label{font-weight:bold;color:#374151;margin-bottom:8px;font-size:18px}
-    .value{font-size:22px;word-break:break-word;color:#111827}
-    #heardBox{
-      min-height:120px;
-      background:#ecfeff;
-      border-color:#67e8f9;
+    .robot{
+      width:230px;height:230px;margin:8px auto 14px;
+      background:linear-gradient(#8ee7ff,#4da8ff);
+      border-radius:42px;
+      position:relative;
+      border:8px solid #2457c5;
     }
-    #heardText{
-      font-size:30px;
-      font-weight:bold;
-      color:#0f172a;
-      line-height:1.35;
+    .robot:before{
+      content:"";position:absolute;width:12px;height:52px;background:#2457c5;top:-55px;left:50%;transform:translateX(-50%);border-radius:8px;
     }
-    .buttons{
-      display:flex;
-      gap:14px;
-      justify-content:center;
-      flex-wrap:wrap;
-      margin:22px 0;
-    }
+    .antenna{position:absolute;width:34px;height:34px;background:#ffcc33;border-radius:50%;top:-82px;left:50%;transform:translateX(-50%);border:5px solid #2457c5}
+    .eye{position:absolute;width:52px;height:52px;background:#fff;border-radius:50%;top:64px;border:5px solid #2457c5}
+    .eye.left{left:45px}.eye.right{right:45px}
+    .eye:after{content:"";position:absolute;width:20px;height:20px;background:#17324d;border-radius:50%;top:12px;left:12px}
+    .mouth{position:absolute;width:100px;height:24px;background:#17324d;border-radius:0 0 30px 30px;bottom:45px;left:50%;transform:translateX(-50%)}
+    .robot.speaking .mouth{animation:talk .35s infinite alternate}
+    .robot.listening{box-shadow:0 0 0 10px rgba(45,180,90,.18),0 0 35px rgba(45,180,90,.55)}
+    @keyframes talk{from{height:12px}to{height:34px}}
+    .controls{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
     button{
-      border:0;
-      border-radius:999px;
-      padding:16px 24px;
-      font-size:18px;
-      font-weight:bold;
-      cursor:pointer;
-      box-shadow:0 8px 18px rgba(0,0,0,.15);
+      border:0;border-radius:18px;padding:14px 18px;font-weight:800;font-size:16px;cursor:pointer;
+      color:#fff;background:#2457c5;box-shadow:0 6px 0 #163985;
     }
-    .start{background:#22c55e;color:white}
-    .stop{background:#ef4444;color:white}
-    .clear{background:#3b82f6;color:white}
-    button:disabled{opacity:.45;cursor:not-allowed}
-    .log{
-      background:#111827;
-      color:#d1fae5;
-      border-radius:18px;
-      padding:16px;
-      min-height:130px;
-      max-height:220px;
-      overflow:auto;
-      font-family:Consolas, monospace;
-      font-size:15px;
-      white-space:pre-wrap;
-    }
-    .tips{
-      margin-top:18px;
-      background:#fff7ed;
-      border:2px solid #fed7aa;
-      border-radius:18px;
-      padding:16px;
-      line-height:1.55;
-      font-size:16px;
-    }
-    .badge{
-      display:inline-block;
-      padding:6px 12px;
-      border-radius:999px;
-      background:#e0f2fe;
-      color:#0369a1;
-      font-weight:bold;
-    }
-    @media(max-width:700px){.panel{grid-template-columns:1fr}.app{padding:20px}button{width:100%}}
+    button:active{transform:translateY(4px);box-shadow:0 2px 0 #163985}
+    button.secondary{background:#20a366;box-shadow:0 6px 0 #107445}
+    button.danger{background:#e24d65;box-shadow:0 6px 0 #9a2638}
+    .status-row{display:grid;grid-template-columns:170px 1fr;gap:10px;margin:10px 0;align-items:center}
+    .label{font-weight:900;color:#2457c5}
+    .value{background:#f3f7ff;border:2px solid #d9e8ff;border-radius:14px;padding:11px;min-height:44px;font-weight:700}
+    .heard{font-size:26px;color:#0c7a48;background:#edfff6;border-color:#b7f0d3}
+    .question{font-size:22px;color:#17324d;background:#fff8df;border-color:#ffe38a}
+    .log{height:190px;overflow:auto;background:#f7fbff;border:2px solid #d9e8ff;border-radius:18px;padding:12px;line-height:1.55}
+    .robot-line{color:#2457c5;font-weight:700;margin-bottom:8px}
+    .student-line{color:#0c7a48;font-weight:700;margin-bottom:8px}
+    .system-line{color:#8a5a00;font-weight:700;margin-bottom:8px}
+    .tips{font-size:14px;color:#5d6c80;margin-top:12px;line-height:1.45}
+    @media(max-width:800px){.grid{grid-template-columns:1fr}.robot{width:200px;height:200px}.status-row{grid-template-columns:1fr}.log{height:150px}}
   </style>
 </head>
 <body>
   <main class="app">
-    <h1>🎤 V3 Microphone Test Only</h1>
-    <div class="subtitle">No robot voice. This page only checks if Chrome can hear you.</div>
-    <div class="robot">🤖</div>
+    <header>
+      <h1>🤖 Phrasal Verb Talking Robot</h1>
+      <div class="tagline">Version 2 Diagnostic Test — Listen, Speak, and Check What Chrome Hears</div>
+    </header>
 
-    <div class="panel">
-      <section class="card">
-        <div class="label">Browser Support</div>
-        <div class="value" id="supportText">Checking...</div>
-      </section>
-      <section class="card">
-        <div class="label">Microphone Status</div>
-        <div class="value" id="statusText">Not started</div>
-      </section>
-    </div>
+    <section class="grid">
+      <div class="robot-card">
+        <div id="robot" class="robot"><div class="antenna"></div><div class="eye left"></div><div class="eye right"></div><div class="mouth"></div></div>
+        <div class="controls">
+          <button onclick="startRobot()">Start Robot</button>
+          <button class="secondary" onclick="testMic()">Test Microphone</button>
+          <button class="danger" onclick="stopAll()">Stop</button>
+        </div>
+        <div class="tips">
+          Best test: use Chrome on a live HTTPS page, allow microphone, then say clearly: <b>wake up</b>, <b>get up</b>, <b>turn on</b>, or <b>look for</b>.
+        </div>
+      </div>
 
-    <section class="card" id="heardBox">
-      <div class="label">I Heard:</div>
-      <div id="heardText">---</div>
+      <div class="panel">
+        <div class="status-row"><div class="label">Robot Status</div><div id="robotStatus" class="value">Ready</div></div>
+        <div class="status-row"><div class="label">Mic Status</div><div id="micStatus" class="value">Not listening</div></div>
+        <div class="status-row"><div class="label">Current Task</div><div id="currentTask" class="value question">Press Start Robot.</div></div>
+        <div class="status-row"><div class="label">I Heard</div><div id="heardText" class="value heard">—</div></div>
+        <div class="status-row"><div class="label">Keyword Found</div><div id="keywordText" class="value">—</div></div>
+        <h3>Conversation Log</h3>
+        <div id="log" class="log"></div>
+      </div>
     </section>
-
-    <div class="buttons">
-      <button class="start" id="startBtn">Start Listening</button>
-      <button class="stop" id="stopBtn" disabled>Stop Listening</button>
-      <button class="clear" id="clearBtn">Clear</button>
-    </div>
-
-    <div class="label">Diagnostic Log</div>
-    <div class="log" id="logBox">Ready. Click Start Listening, then say: hello\n</div>
-
-    <div class="tips">
-      <span class="badge">Test words</span><br>
-      Say: <b>hello</b>, <b>wake up</b>, <b>turn on</b>, or <b>look for</b>.<br>
-      If this page does not show your words, the issue is Chrome or Windows microphone settings, not the robot code.
-    </div>
   </main>
 
 <script>
-(function(){
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const supportText = document.getElementById('supportText');
-  const statusText = document.getElementById('statusText');
-  const heardText = document.getElementById('heardText');
-  const logBox = document.getElementById('logBox');
-  const startBtn = document.getElementById('startBtn');
-  const stopBtn = document.getElementById('stopBtn');
-  const clearBtn = document.getElementById('clearBtn');
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition = null;
+let currentStep = 0;
+let isListening = false;
+let retryCount = 0;
 
-  let recognition = null;
-  let listening = false;
+const lessons = [
+  { target:'wake up', prompt:'Please say: I wake up at six.', matches:['wake up','wake','woke up','wakeup'] },
+  { target:'get up', prompt:'Now say: I get up early.', matches:['get up','got up','get','getting up'] },
+  { target:'turn on', prompt:'Now say: I turn on the light.', matches:['turn on','turned on','turn the','turn my'] },
+  { target:'look for', prompt:'Now say: I look for my bag.', matches:['look for','looking for','looked for','look'] },
+  { target:'put on', prompt:'Now say: I put on my shoes.', matches:['put on','putting on','put my','put'] }
+];
 
-  function log(msg){
-    const time = new Date().toLocaleTimeString();
-    logBox.textContent += `[${time}] ${msg}\n`;
-    logBox.scrollTop = logBox.scrollHeight;
-  }
+function $(id){ return document.getElementById(id); }
+function logLine(type, text){
+  const div = document.createElement('div');
+  div.className = type + '-line';
+  div.textContent = text;
+  $('log').appendChild(div);
+  $('log').scrollTop = $('log').scrollHeight;
+}
+function setRobotClass(cls){
+  $('robot').classList.remove('speaking','listening');
+  if(cls) $('robot').classList.add(cls);
+}
 
-  function setStatus(msg){ statusText.textContent = msg; }
-
+function initRecognition(){
   if(!SpeechRecognition){
-    supportText.textContent = 'Not supported';
-    setStatus('Use Chrome or Edge');
-    startBtn.disabled = true;
-    log('Speech Recognition is not supported in this browser.');
-    return;
+    $('micStatus').textContent = 'Speech Recognition is not supported in this browser.';
+    logLine('system','System: Speech Recognition is not supported. Use Google Chrome.');
+    return false;
   }
+  recognition = new SpeechRecognition();
+  recognition.lang = 'en-US';
+  recognition.continuous = false;
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 3;
 
-  supportText.textContent = 'Supported';
-  log('Speech Recognition supported.');
+  recognition.onstart = () => {
+    isListening = true;
+    $('micStatus').textContent = '🎤 Listening now... speak clearly.';
+    $('robotStatus').textContent = 'Listening';
+    setRobotClass('listening');
+  };
 
-  function createRecognition(){
-    recognition = new SpeechRecognition();
-    recognition.lang = 'en-US';
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.maxAlternatives = 1;
+  recognition.onspeechstart = () => {
+    $('micStatus').textContent = '🎤 Speech detected... keep talking.';
+  };
 
-    recognition.onstart = function(){
-      listening = true;
-      setStatus('Listening... speak now');
-      startBtn.disabled = true;
-      stopBtn.disabled = false;
-      log('Recognition started.');
-    };
+  recognition.onspeechend = () => {
+    $('micStatus').textContent = 'Processing speech...';
+  };
 
-    recognition.onspeechstart = function(){
-      setStatus('Speech detected...');
-      log('Speech detected.');
-    };
+  recognition.onresult = (event) => {
+    let finalText = '';
+    let interimText = '';
+    for(let i = event.resultIndex; i < event.results.length; i++){
+      const transcript = event.results[i][0].transcript.trim();
+      if(event.results[i].isFinal) finalText += transcript + ' ';
+      else interimText += transcript + ' ';
+    }
+    const displayText = (finalText || interimText).trim();
+    if(displayText){
+      $('heardText').textContent = displayText;
+      $('micStatus').textContent = finalText ? 'Speech captured.' : 'Hearing: ' + displayText;
+    }
+    if(finalText.trim()) handleStudentSpeech(finalText.trim());
+  };
 
-    recognition.onspeechend = function(){
-      setStatus('Processing...');
-      log('Speech ended; processing result.');
-    };
+  recognition.onerror = (event) => {
+    isListening = false;
+    setRobotClass('');
+    $('micStatus').textContent = 'Error: ' + event.error;
+    logLine('system','System error: ' + event.error);
+    if(event.error === 'no-speech'){
+      speak('I did not catch any words. Please speak louder and closer to the microphone.', () => listenAgainSoon());
+    }
+  };
 
-    recognition.onresult = function(event){
-      let finalText = '';
-      let interimText = '';
-      for(let i = event.resultIndex; i < event.results.length; i++){
-        const transcript = event.results[i][0].transcript.trim();
-        if(event.results[i].isFinal){ finalText += transcript + ' '; }
-        else{ interimText += transcript + ' '; }
-      }
-      const shown = (finalText || interimText).trim();
-      if(shown){
-        heardText.textContent = shown;
-        setStatus(finalText ? 'Final result received' : 'Hearing...');
-        log((finalText ? 'Final: ' : 'Interim: ') + shown);
-      }
-    };
+  recognition.onend = () => {
+    isListening = false;
+    if($('robotStatus').textContent === 'Listening') $('robotStatus').textContent = 'Stopped listening';
+    if($('micStatus').textContent.includes('Listening')) $('micStatus').textContent = 'Listening ended.';
+    setRobotClass('');
+  };
+  return true;
+}
 
-    recognition.onerror = function(event){
-      setStatus('Error: ' + event.error);
-      log('ERROR: ' + event.error);
-      if(event.message){ log('Message: ' + event.message); }
-    };
+function speak(text, callback){
+  try { if(recognition && isListening) recognition.stop(); } catch(e){}
+  speechSynthesis.cancel();
+  $('robotStatus').textContent = 'Speaking';
+  $('micStatus').textContent = 'Robot is speaking. Mic will start after.';
+  setRobotClass('speaking');
+  logLine('robot','Robot: ' + text);
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'en-US';
+  utter.rate = 0.9;
+  utter.pitch = 1.05;
+  const voices = speechSynthesis.getVoices();
+  const preferred = voices.find(v => /female|zira|jenny|aria|samantha|google us english/i.test(v.name));
+  if(preferred) utter.voice = preferred;
+  utter.onend = () => {
+    setRobotClass('');
+    $('robotStatus').textContent = 'Ready to listen';
+    setTimeout(() => callback && callback(), 650);
+  };
+  utter.onerror = () => {
+    setRobotClass('');
+    callback && callback();
+  };
+  speechSynthesis.speak(utter);
+}
 
-    recognition.onend = function(){
-      log('Recognition ended.');
-      if(listening){
-        // Keep it alive for testing, unless user pressed Stop.
-        setTimeout(function(){
-          try{
-            if(listening){ recognition.start(); }
-          }catch(e){ log('Restart blocked: ' + e.message); }
-        }, 500);
-      }else{
-        setStatus('Stopped');
-        startBtn.disabled = false;
-        stopBtn.disabled = true;
-      }
-    };
-  }
+function startRobot(){
+  if(!initRecognition()) return;
+  currentStep = 0;
+  retryCount = 0;
+  $('log').innerHTML = '';
+  $('heardText').textContent = '—';
+  $('keywordText').textContent = '—';
+  speak('Hello! I am your phrasal verb robot. Let us test your microphone first. ' + lessons[currentStep].prompt, () => startListening());
+  $('currentTask').textContent = lessons[currentStep].prompt;
+}
 
-  startBtn.addEventListener('click', function(){
-    heardText.textContent = 'Listening...';
-    createRecognition();
+function testMic(){
+  if(!initRecognition()) return;
+  $('heardText').textContent = '—';
+  $('keywordText').textContent = 'Testing only';
+  $('currentTask').textContent = 'Say anything. Example: hello robot.';
+  logLine('system','System: Microphone test started. Say anything.');
+  startListening(true);
+}
+
+function startListening(testOnly=false){
+  if(!recognition && !initRecognition()) return;
+  try{
+    $('micStatus').textContent = 'Starting microphone...';
+    recognition.abort();
+  }catch(e){}
+  setTimeout(()=>{
     try{
       recognition.start();
-    }catch(e){
-      setStatus('Start failed');
-      log('Start failed: ' + e.message);
+      if(testOnly){
+        recognition._testOnly = true;
+      } else {
+        recognition._testOnly = false;
+      }
+    }catch(err){
+      $('micStatus').textContent = 'Could not start microphone: ' + err.message;
+      logLine('system','System: Could not start microphone. ' + err.message);
     }
-  });
+  }, 250);
+}
 
-  stopBtn.addEventListener('click', function(){
-    listening = false;
-    try{
-      recognition.stop();
-      log('Stop requested by user.');
-    }catch(e){ log('Stop failed: ' + e.message); }
-  });
+function listenAgainSoon(){
+  setTimeout(() => startListening(false), 900);
+}
 
-  clearBtn.addEventListener('click', function(){
-    heardText.textContent = '---';
-    logBox.textContent = 'Cleared. Click Start Listening, then say: hello\n';
-    setStatus(listening ? 'Listening... speak now' : 'Not started');
-  });
-})();
+function normalize(text){
+  return text.toLowerCase().replace(/[.,!?]/g,'').replace(/\s+/g,' ').trim();
+}
+
+function handleStudentSpeech(rawText){
+  const text = normalize(rawText);
+  logLine('student','Student: ' + rawText);
+  if(recognition && recognition._testOnly){
+    $('keywordText').textContent = 'Mic test successful';
+    speak('Good. I heard you say: ' + rawText, null);
+    return;
+  }
+  const lesson = lessons[currentStep];
+  const found = lesson.matches.find(m => text.includes(m));
+  if(found){
+    retryCount = 0;
+    $('keywordText').textContent = lesson.target + ' ✅';
+    currentStep++;
+    if(currentStep >= lessons.length){
+      speak('Excellent work! You practiced five phrasal verbs. Great speaking today!', null);
+      $('currentTask').textContent = 'Finished!';
+      return;
+    }
+    $('currentTask').textContent = lessons[currentStep].prompt;
+    speak('Great! I heard the phrasal verb ' + lesson.target + '. Next. ' + lessons[currentStep].prompt, () => startListening(false));
+  } else {
+    retryCount++;
+    $('keywordText').textContent = 'No target keyword found';
+    if(retryCount >= 2){
+      speak('I heard you, but I did not hear the target phrasal verb. Please say only: ' + lesson.target, () => startListening(false));
+    } else {
+      speak('I heard: ' + rawText + '. Please try again and use the phrasal verb ' + lesson.target + '.', () => startListening(false));
+    }
+  }
+}
+
+function stopAll(){
+  try{ if(recognition) recognition.abort(); }catch(e){}
+  speechSynthesis.cancel();
+  isListening = false;
+  setRobotClass('');
+  $('robotStatus').textContent = 'Stopped';
+  $('micStatus').textContent = 'Not listening';
+  logLine('system','System: Stopped.');
+}
+
+if('speechSynthesis' in window){
+  speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+}
 </script>
 </body>
 </html>
