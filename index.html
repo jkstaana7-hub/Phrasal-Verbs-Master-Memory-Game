@@ -2,248 +2,485 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Phrasal Verb Talking Robot V5</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>RoboTalk V6A - Robot Face Mode</title>
   <style>
     *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      width:100%;
+      height:100%;
+      overflow:hidden;
+      font-family:Arial, Helvetica, sans-serif;
+      background:#071b3a;
+      color:white;
+      touch-action:manipulation;
+    }
+
     body{
-      margin:0;
-      font-family:Arial, sans-serif;
-      background:linear-gradient(135deg,#e0f7ff,#fff2e6,#eefce9);
-      color:#102033;
-      min-height:100vh;
       display:flex;
-      justify-content:center;
       align-items:center;
-      padding:20px;
+      justify-content:center;
     }
-    .app{
-      width:min(1050px,100%);
-      background:#ffffffee;
-      border-radius:26px;
-      box-shadow:0 18px 45px rgba(0,0,0,.12);
-      padding:24px;
-      border:3px solid #d8e8ff;
-    }
-    h1{
-      margin:0;
-      text-align:center;
-      color:#2358c9;
-      font-size:clamp(30px,5vw,54px);
-    }
-    .subtitle{text-align:center;font-size:20px;margin:8px 0 22px;color:#3c4a5e}
-    .grid{
-      display:grid;
-      grid-template-columns: 330px 1fr;
-      gap:22px;
-    }
-    .card{
-      border:2px solid #d6e7ff;
-      border-radius:20px;
-      padding:18px;
-      background:#fff;
-    }
-    .robotBox{
-      text-align:center;
+
+    .robot-screen{
+      width:100vw;
+      height:100vh;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(110,209,255,.35), transparent 28%),
+        radial-gradient(circle at 80% 15%, rgba(255,223,109,.25), transparent 25%),
+        linear-gradient(145deg,#123d7c,#06172f 65%,#041024);
       display:flex;
       flex-direction:column;
       align-items:center;
-      justify-content:flex-start;
-    }
-    .robot{
-      width:230px;height:230px;border-radius:40px;
-      background:linear-gradient(#8be2ff,#44a7ff);
-      border:8px solid #2657c7;
+      justify-content:space-between;
+      padding:clamp(14px,3vw,34px);
       position:relative;
-      margin:30px auto 20px;
+    }
+
+    .top-bar{
+      width:100%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      font-weight:900;
+      letter-spacing:.08em;
+      opacity:.92;
+      font-size:clamp(14px,2vw,24px);
+      user-select:none;
+    }
+
+    .brand{
+      background:rgba(255,255,255,.12);
+      border:2px solid rgba(255,255,255,.25);
+      padding:10px 18px;
+      border-radius:999px;
+      backdrop-filter:blur(6px);
+    }
+
+    .teacher-dot{
+      width:54px;
+      height:54px;
+      border-radius:50%;
+      background:rgba(255,255,255,.08);
+      border:2px solid rgba(255,255,255,.18);
+    }
+
+    .face-area{
+      flex:1;
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:clamp(24px,5vh,52px);
+    }
+
+    .eyes{
+      display:flex;
+      gap:clamp(42px,9vw,120px);
+      align-items:center;
+      justify-content:center;
+      transition:.2s ease;
+    }
+
+    .eye{
+      width:clamp(112px,18vw,230px);
+      height:clamp(112px,18vw,230px);
+      background:#f7fcff;
+      border-radius:45%;
+      border:clamp(8px,1.2vw,16px) solid #73d9ff;
+      position:relative;
+      box-shadow:
+        0 0 25px rgba(115,217,255,.8),
+        inset 0 -14px 24px rgba(39,109,180,.18);
+      overflow:hidden;
+      transition:.16s ease;
+    }
+
+    .pupil{
+      position:absolute;
+      width:42%;
+      height:42%;
+      border-radius:50%;
+      background:#09234d;
+      left:29%;
+      top:30%;
+      box-shadow:inset 0 0 0 8px #1e83ff;
+      transition:.25s ease;
+    }
+
+    .pupil:after{
+      content:"";
+      position:absolute;
+      width:28%;
+      height:28%;
+      border-radius:50%;
+      background:white;
+      top:18%;
+      left:20%;
+    }
+
+    .blink .eye{
+      height:clamp(22px,4vw,44px);
+      border-radius:999px;
+      margin-top:clamp(45px,7vw,95px);
+      margin-bottom:clamp(45px,7vw,95px);
+    }
+
+    .blink .pupil{opacity:0}
+
+    .thinkingEyes .pupil{left:12%}
+    .listeningEyes .pupil{transform:scale(1.08)}
+    .happyEyes .eye{border-radius:50% 50% 42% 42%}
+
+    .mouth-wrap{
+      height:clamp(90px,15vh,170px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .mouth{
+      width:clamp(150px,23vw,310px);
+      height:clamp(48px,8vw,92px);
+      background:#ff6f91;
+      border:clamp(7px,1vw,14px) solid #ffd2df;
+      border-radius:0 0 999px 999px;
+      box-shadow:0 0 26px rgba(255,111,145,.65);
+      transition:.12s ease;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .mouth:before{
+      content:"";
+      position:absolute;
+      width:100%;
+      height:42%;
+      left:0;
+      top:0;
+      background:rgba(255,255,255,.28);
+    }
+
+    .mouth.closed{
+      height:clamp(16px,3vw,28px);
+      border-radius:999px;
+      background:#ffd2df;
+      box-shadow:0 0 14px rgba(255,210,223,.55);
+    }
+
+    .mouth.thinking{
+      width:clamp(90px,14vw,160px);
+      height:clamp(28px,4vw,44px);
+      border-radius:999px;
+      background:#ffd2df;
+    }
+
+    .mouth.talking{
+      animation:talkMouth .18s infinite alternate ease-in-out;
+    }
+
+    @keyframes talkMouth{
+      from{height:clamp(24px,4vw,45px); border-radius:999px}
+      to{height:clamp(76px,12vw,135px); border-radius:0 0 999px 999px}
+    }
+
+    .status-panel{
+      width:min(980px,94vw);
+      min-height:clamp(92px,14vh,145px);
+      border-radius:34px;
+      border:4px solid rgba(255,255,255,.25);
+      background:rgba(255,255,255,.14);
+      box-shadow:0 14px 36px rgba(0,0,0,.22);
+      backdrop-filter:blur(8px);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:14px 22px;
+      margin-bottom:clamp(8px,2vh,18px);
+    }
+
+    .status{
+      font-size:clamp(30px,6vw,74px);
+      font-weight:1000;
+      letter-spacing:.03em;
+      line-height:1.05;
+      text-shadow:0 4px 14px rgba(0,0,0,.25);
+    }
+
+    .substatus{
+      margin-top:8px;
+      font-size:clamp(16px,2.6vw,32px);
+      font-weight:800;
+      opacity:.92;
+    }
+
+    .start-overlay{
+      position:absolute;
+      inset:0;
+      background:linear-gradient(145deg,rgba(6,23,47,.96),rgba(18,61,124,.94));
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      z-index:20;
+      padding:28px;
+    }
+
+    .start-overlay.hidden{display:none}
+
+    .start-title{
+      font-size:clamp(46px,9vw,108px);
+      font-weight:1000;
+      margin:0 0 12px;
+      color:#9de8ff;
+      text-shadow:0 0 30px rgba(115,217,255,.65);
+    }
+
+    .start-sub{
+      font-size:clamp(18px,3vw,34px);
+      font-weight:800;
+      margin:0 0 32px;
+      max-width:900px;
+      line-height:1.3;
+    }
+
+    button{
+      font-size:clamp(24px,4vw,46px);
+      font-weight:1000;
+      border:0;
+      border-radius:999px;
+      padding:22px 44px;
+      cursor:pointer;
+      background:#27d96c;
+      color:#062417;
+      box-shadow:0 16px 34px rgba(0,0,0,.28);
+    }
+
+    .small-actions{
+      position:absolute;
+      right:18px;
+      bottom:18px;
+      z-index:9;
+      display:flex;
+      gap:10px;
+      opacity:.22;
       transition:.2s;
     }
-    .robot.speaking{transform:scale(1.03); box-shadow:0 0 0 10px #ffe680}
-    .robot.listening{box-shadow:0 0 0 10px #8ff0b3}
-    .robot:before{
-      content:"";position:absolute;left:50%;top:-72px;width:10px;height:72px;background:#2657c7;transform:translateX(-50%);
+
+    .small-actions:hover{opacity:1}
+    .small-actions button{
+      font-size:14px;
+      padding:10px 14px;
+      background:rgba(255,255,255,.2);
+      color:white;
+      border:1px solid rgba(255,255,255,.3);
     }
-    .robot:after{
-      content:"";position:absolute;left:50%;top:-92px;width:34px;height:34px;background:#ffd842;border:5px solid #2657c7;border-radius:50%;transform:translateX(-50%);
-    }
-    .eye{position:absolute;top:64px;width:54px;height:54px;background:white;border:6px solid #2657c7;border-radius:50%}
-    .eye.left{left:45px}.eye.right{right:45px}
-    .eye:after{content:"";position:absolute;width:22px;height:22px;background:#102033;border-radius:50%;left:10px;top:10px}
-    .mouth{position:absolute;left:58px;bottom:48px;width:105px;height:42px;background:#102033;border-radius:0 0 50px 50px}
-    .buttons{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
-    button{
-      border:0;border-radius:18px;padding:15px 22px;font-weight:800;font-size:17px;
-      cursor:pointer;color:white;box-shadow:0 8px 16px rgba(0,0,0,.12);
-    }
-    .start{background:#245bcd}.stop{background:#ef3e4a}.reset{background:#2f80ed}
-    .statusGrid{display:grid;grid-template-columns:170px 1fr;gap:12px;align-items:center}
-    .label{font-weight:800;color:#2358c9}
-    .value{
-      border:2px solid #d8e8ff;border-radius:14px;padding:13px 15px;background:#f6f9ff;
-      font-size:18px;font-weight:700;
-    }
-    .bigSignal{
-      margin:16px 0;
+
+    .hidden-panel{
+      position:absolute;
+      top:80px;
+      right:20px;
+      width:min(420px,90vw);
+      max-height:70vh;
+      overflow:auto;
+      background:rgba(255,255,255,.96);
+      color:#102033;
       border-radius:20px;
-      padding:20px;
-      font-size:30px;
-      text-align:center;
-      font-weight:900;
-      border:3px solid #d8e8ff;
+      padding:18px;
+      z-index:30;
+      display:none;
+      box-shadow:0 18px 45px rgba(0,0,0,.28);
     }
-    .speakNow{background:#e8fff1;border-color:#63d98d;color:#08753d}
-    .robotTalking{background:#fff7d8;border-color:#ffd34a;color:#8a6200}
-    .thinking{background:#edf3ff;border-color:#7fb0ff;color:#174bb0}
-    .idle{background:#f7f7f7;color:#444}
-    .heard{
-      background:#eafff4;border:2px solid #8ce5b4;border-radius:16px;padding:14px;font-size:26px;font-weight:900;color:#08753d;
-      min-height:66px;
+
+    .hidden-panel.show{display:block}
+    .hidden-panel h3{margin-top:0;color:#123d7c}
+    .debug{
+      background:#f3f6fb;
+      border:1px solid #dce6f5;
+      border-radius:12px;
+      padding:10px;
+      font-size:13px;
+      line-height:1.45;
+      height:180px;
+      overflow:auto;
+      white-space:pre-wrap;
     }
-    .task{
-      background:#fff9df;border:2px solid #ffcf48;border-radius:16px;padding:14px;font-size:21px;font-weight:900;color:#19314f;
-    }
-    .log{
-      height:220px;overflow:auto;background:#f8fbff;border:2px solid #d6e7ff;border-radius:16px;padding:14px;line-height:1.45;
-      font-size:16px;
-    }
-    .robotLine{color:#2358c9;font-weight:800;margin:8px 0}
-    .studentLine{color:#098045;font-weight:800;margin:8px 0}
-    .hint{font-size:14px;color:#5a6678;line-height:1.35;margin-top:14px}
-    @media(max-width:850px){
-      body{padding:8px}
-      .app{padding:14px}
-      .grid{grid-template-columns:1fr}
-      .statusGrid{grid-template-columns:1fr}
-      .robot{width:190px;height:190px}
-      .eye{top:52px}.eye.left{left:34px}.eye.right{right:34px}.mouth{left:43px;bottom:38px}
+
+    @media (orientation:portrait){
+      .robot-screen{padding-top:22px}
+      .face-area{gap:38px}
+      .eyes{gap:42px}
+      .status{font-size:clamp(34px,9vw,80px)}
+      .substatus{font-size:clamp(18px,4vw,34px)}
     }
   </style>
 </head>
 <body>
-  <main class="app">
-    <h1>🤖 Phrasal Verb Talking Robot</h1>
-    <div class="subtitle">Version 5 — Better Turn-Taking + Longer Student Speaking Time</div>
+  <div class="robot-screen">
+    <div class="top-bar">
+      <div class="brand">ROBOTALK V6</div>
+      <div id="teacherDot" class="teacher-dot" title="Hold for teacher panel"></div>
+    </div>
 
-    <section class="grid">
-      <div class="card robotBox">
-        <div id="robot" class="robot">
-          <div class="eye left"></div>
-          <div class="eye right"></div>
-          <div class="mouth"></div>
-        </div>
-        <div class="buttons">
-          <button class="start" onclick="startConversation()">Start Robot</button>
-          <button class="stop" onclick="stopAll()">Stop</button>
-          <button class="reset" onclick="resetLesson()">Reset</button>
-        </div>
-        <p class="hint">
-          V5 waits longer before processing. The robot will not answer until the student stops talking or the listening timer ends.
-          Speak in full sentences, for example: <b>I wake up at six.</b>
-        </p>
+    <div id="faceArea" class="face-area">
+      <div id="eyes" class="eyes">
+        <div class="eye"><div class="pupil"></div></div>
+        <div class="eye"><div class="pupil"></div></div>
       </div>
 
-      <div class="card">
-        <div id="bigSignal" class="bigSignal idle">Ready</div>
-
-        <div class="statusGrid">
-          <div class="label">Robot Status</div><div id="robotStatus" class="value">Idle</div>
-          <div class="label">Mic Status</div><div id="micStatus" class="value">Off</div>
-          <div class="label">Current Task</div><div id="task" class="task">Press Start Robot.</div>
-          <div class="label">I Heard</div><div id="heard" class="heard">—</div>
-          <div class="label">Keyword Found</div><div id="keyword" class="value">—</div>
-        </div>
-
-        <h3>Conversation Log</h3>
-        <div id="log" class="log"></div>
+      <div class="mouth-wrap">
+        <div id="mouth" class="mouth closed"></div>
       </div>
-    </section>
-  </main>
+    </div>
+
+    <div class="status-panel">
+      <div id="status" class="status">READY</div>
+      <div id="substatus" class="substatus">Tap Start to meet RoboTalk.</div>
+    </div>
+
+    <div class="small-actions">
+      <button onclick="stopAll()">Stop</button>
+      <button onclick="resetRobot()">Reset</button>
+    </div>
+
+    <div id="teacherPanel" class="hidden-panel">
+      <h3>Teacher / Debug Panel</h3>
+      <p><b>Last heard:</b> <span id="lastHeard">—</span></p>
+      <p><b>Target:</b> <span id="targetWord">—</span></p>
+      <div id="debug" class="debug"></div>
+    </div>
+
+    <div id="startOverlay" class="start-overlay">
+      <h1 class="start-title">🤖 RoboTalk</h1>
+      <p class="start-sub">Friendly Robot Teacher<br>Practice speaking with phrasal verbs.</p>
+      <button onclick="startRobot()">START ROBOT</button>
+    </div>
+  </div>
 
 <script>
-let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
 let recognition = null;
-let isRunning = false;
-let isSpeaking = false;
-let listenTimer = null;
-let silenceTimer = null;
+let running = false;
+let speaking = false;
 let currentStep = 0;
+let retryCount = 0;
 let finalText = "";
 let interimText = "";
-let retryCount = 0;
+let listenTimer = null;
+let silenceTimer = null;
+let blinkTimer = null;
+let nameMemory = "my friend";
 
-const steps = [
+const lesson = [
   {
-    type:"greeting",
-    robot:"Hello! I am your phrasal verb robot. How are you today?",
-    accept:["fine","good","great","okay","ok","happy","hello","hi","how are you"],
-    success:"Nice to hear from you. Today, we will practice phrasal verbs in a short conversation.",
-    retry:"Please say a short greeting, like: I am fine."
+    kind:"name",
+    say:"Hello! I am RoboTalk, your friendly robot teacher. What is your name?",
+    retry:"Please say your name. You can say, my name is Jake."
   },
   {
-    type:"ready",
-    robot:"Are you ready to practice phrasal verbs?",
-    accept:["yes","ready","okay","ok","sure","let's go","i am ready"],
-    success:"Great! Let us begin.",
-    retry:"Please say yes, or say: I am ready."
+    kind:"warmup",
+    say:"Nice to meet you, NAME. How are you today?",
+    accept:["fine","good","great","happy","okay","ok","wonderful","tired","sleepy","sad"],
+    success:"Thank you for telling me. I am happy to talk with you today.",
+    retry:"Please answer with a short sentence, like, I am fine."
   },
   {
-    type:"phrasal",
+    kind:"intro",
+    say:"Today, we will practice phrasal verbs. Please answer in a complete sentence.",
+    auto:true
+  },
+  {
+    kind:"phrasal",
     phrasal:"wake up",
-    robot:"First phrasal verb: wake up. What time do you usually wake up?",
+    say:"First phrasal verb: wake up. What time do you usually wake up?",
     success:"Excellent! You used wake up correctly.",
-    retry:"Try again. Please answer using wake up. For example: I wake up at six."
+    retry:"Good try. Please answer using wake up. For example, I wake up at six."
   },
   {
-    type:"phrasal",
+    kind:"phrasal",
     phrasal:"get up",
-    robot:"Next phrasal verb: get up. What do you do after you get up?",
-    success:"Good job! You used get up correctly.",
-    retry:"Please try again using get up. For example: After I get up, I brush my teeth."
+    say:"Next phrasal verb: get up. What do you do after you get up?",
+    success:"Great speaking! You used get up correctly.",
+    retry:"Good try. Please use get up. For example, after I get up, I brush my teeth."
   },
   {
-    type:"phrasal",
+    kind:"phrasal",
     phrasal:"turn on",
-    robot:"Next phrasal verb: turn on. What do you turn on when you study?",
-    success:"Excellent sentence! You used turn on correctly.",
-    retry:"Please use turn on. For example: I turn on my computer."
+    say:"Next phrasal verb: turn on. What do you turn on when you study?",
+    success:"Very good! You used turn on correctly.",
+    retry:"Please try again using turn on. For example, I turn on my computer."
   },
   {
-    type:"phrasal",
+    kind:"phrasal",
     phrasal:"look for",
-    robot:"Next phrasal verb: look for. What do you look for when you lose something?",
-    success:"Great! You used look for correctly.",
-    retry:"Please answer using look for. For example: I look for my pencil."
+    say:"Last phrasal verb: look for. What do you look for when you lose something?",
+    success:"Excellent! You used look for correctly.",
+    retry:"Please answer using look for. For example, I look for my pencil."
   },
   {
-    type:"end",
-    robot:"Wonderful work! You practiced wake up, get up, turn on, and look for. Great speaking today!",
-    accept:[],
-    success:"",
-    retry:""
+    kind:"end",
+    say:"Wonderful work, NAME! You practiced wake up, get up, turn on, and look for. See you next time!"
   }
 ];
 
-function $(id){return document.getElementById(id);}
-function logLine(cls, text){
-  const div = document.createElement("div");
-  div.className = cls;
-  div.textContent = text;
-  $("log").appendChild(div);
-  $("log").scrollTop = $("log").scrollHeight;
+function $(id){return document.getElementById(id)}
+function clean(text){
+  return (text || "").toLowerCase().replace(/[.,!?]/g," ").replace(/\s+/g," ").trim();
 }
-function setSignal(text, cls){
-  $("bigSignal").className = "bigSignal " + cls;
-  $("bigSignal").textContent = text;
+function debug(msg){
+  const box = $("debug");
+  const time = new Date().toLocaleTimeString();
+  box.textContent += "[" + time + "] " + msg + "\n";
+  box.scrollTop = box.scrollHeight;
 }
-function normalize(t){
-  return (t || "").toLowerCase().replace(/[.,!?]/g," ").replace(/\s+/g," ").trim();
+function sayWithName(text){
+  return text.replaceAll("NAME", nameMemory);
+}
+
+function setFace(mode, main, sub){
+  const eyes = $("eyes");
+  const mouth = $("mouth");
+  eyes.classList.remove("thinkingEyes","listeningEyes","happyEyes");
+  mouth.className = "mouth";
+
+  if(mode === "talking"){
+    mouth.classList.add("talking");
+    eyes.classList.add("happyEyes");
+  } else if(mode === "listening"){
+    mouth.classList.add("closed");
+    eyes.classList.add("listeningEyes");
+  } else if(mode === "thinking"){
+    mouth.classList.add("thinking");
+    eyes.classList.add("thinkingEyes");
+  } else {
+    mouth.classList.add("closed");
+  }
+
+  $("status").textContent = main;
+  $("substatus").textContent = sub || "";
+}
+
+function scheduleBlink(){
+  clearTimeout(blinkTimer);
+  const delay = 2500 + Math.random() * 3500;
+  blinkTimer = setTimeout(() => {
+    if(!speaking){
+      $("eyes").classList.add("blink");
+      setTimeout(() => $("eyes").classList.remove("blink"), 160);
+    }
+    scheduleBlink();
+  }, delay);
 }
 
 function initRecognition(){
   if(!SpeechRecognition){
-    $("robotStatus").textContent = "Speech Recognition not supported";
-    $("micStatus").textContent = "Use Chrome";
-    setSignal("Not supported", "idle");
+    setFace("idle","NOT SUPPORTED","Please use Google Chrome.");
     return false;
   }
 
@@ -254,34 +491,25 @@ function initRecognition(){
   recognition.maxAlternatives = 1;
 
   recognition.onstart = () => {
-    $("micStatus").textContent = "Listening... speak now";
-    $("robotStatus").textContent = "Waiting for student";
-    setSignal("🟢 Your Turn — Speak Now", "speakNow");
-    $("robot").classList.add("listening");
-    $("heard").textContent = "Listening...";
     finalText = "";
     interimText = "";
-
+    setFace("listening","🎤 LISTENING","Speak now.");
+    debug("Recognition started.");
     clearTimeout(listenTimer);
-    // Long enough for young learners to finish a sentence.
-    listenTimer = setTimeout(() => {
-      safelyStopRecognition();
-    }, 11000);
+    listenTimer = setTimeout(() => stopListeningSafely(), 12000);
   };
 
   recognition.onspeechstart = () => {
-    $("micStatus").textContent = "Student is speaking...";
-    setSignal("🎤 Listening to Student...", "speakNow");
+    setFace("listening","🎤 LISTENING","I can hear you.");
     clearTimeout(silenceTimer);
+    debug("Speech started.");
   };
 
   recognition.onspeechend = () => {
-    $("micStatus").textContent = "Student stopped. Waiting briefly...";
-    // Do not answer immediately. Give the student a short chance to continue.
+    setFace("listening","🟢 YOUR TURN","Finish your sentence.");
     clearTimeout(silenceTimer);
-    silenceTimer = setTimeout(() => {
-      safelyStopRecognition();
-    }, 2200);
+    silenceTimer = setTimeout(() => stopListeningSafely(), 2300);
+    debug("Speech ended. Waiting before processing.");
   };
 
   recognition.onresult = (event) => {
@@ -297,19 +525,18 @@ function initRecognition(){
       }
     }
 
-    if(finalChunk.trim()){
-      finalText += finalChunk;
-    }
+    if(finalChunk.trim()) finalText += finalChunk;
     interimText = interim;
 
-    const display = (finalText + " " + interimText).trim();
-    if(display){
-      $("heard").textContent = display;
+    const heard = (finalText + " " + interimText).trim();
+    if(heard){
+      $("lastHeard").textContent = heard;
+      debug("Heard: " + heard);
     }
   };
 
   recognition.onerror = (event) => {
-    $("micStatus").textContent = "Error: " + event.error;
+    debug("Recognition error: " + event.error);
     if(event.error === "no-speech"){
       finalText = "";
       interimText = "";
@@ -317,54 +544,42 @@ function initRecognition(){
   };
 
   recognition.onend = () => {
-    $("robot").classList.remove("listening");
     clearTimeout(listenTimer);
     clearTimeout(silenceTimer);
+    debug("Recognition ended.");
+    if(!running || speaking) return;
 
-    if(!isRunning || isSpeaking) return;
-
-    $("micStatus").textContent = "Processing answer...";
-    setSignal("🧠 Thinking...", "thinking");
-
-    setTimeout(() => {
-      handleStudentAnswer((finalText + " " + interimText).trim());
-    }, 600);
+    setFace("thinking","🧠 THINKING","Let me check your answer.");
+    setTimeout(() => processAnswer((finalText + " " + interimText).trim()), 850);
   };
 
   return true;
 }
 
-function speak(text, afterSpeak){
-  if(!isRunning) return;
-  isSpeaking = true;
-  safelyStopRecognition();
+function speak(text, callback){
+  if(!running) return;
+  speaking = true;
+  stopListeningSafely();
 
-  $("robotStatus").textContent = "Speaking";
-  $("micStatus").textContent = "Mic paused while robot speaks";
-  setSignal("🔊 Robot Talking", "robotTalking");
-  $("robot").classList.add("speaking");
-  logLine("robotLine", "Robot: " + text);
+  const spoken = sayWithName(text);
+  setFace("talking","🔊 ROBOT TALKING", spoken);
+  debug("Robot: " + spoken);
 
-  const utter = new SpeechSynthesisUtterance(text);
+  const utter = new SpeechSynthesisUtterance(spoken);
   utter.lang = "en-US";
   utter.rate = 0.88;
   utter.pitch = 1.05;
 
   const voices = speechSynthesis.getVoices();
-  const preferred = voices.find(v => /female|zira|jenny|aria|samantha|google us english/i.test(v.name));
+  const preferred = voices.find(v => /zira|jenny|aria|samantha|female|google us english/i.test(v.name));
   if(preferred) utter.voice = preferred;
 
   utter.onend = () => {
-    isSpeaking = false;
-    $("robot").classList.remove("speaking");
-
-    if(afterSpeak){
-      afterSpeak();
+    speaking = false;
+    if(callback){
+      callback();
     } else {
-      // Delay prevents the mic from catching the robot's last words.
-      $("robotStatus").textContent = "Preparing to listen";
-      $("micStatus").textContent = "Waiting before listening...";
-      setSignal("⏳ Get Ready to Speak", "thinking");
+      setFace("thinking","🟢 YOUR TURN","Get ready to speak.");
       setTimeout(startListening, 1400);
     }
   };
@@ -374,20 +589,20 @@ function speak(text, afterSpeak){
 }
 
 function startListening(){
-  if(!isRunning || isSpeaking || !recognition) return;
+  if(!running || speaking || !recognition) return;
   try{
     finalText = "";
     interimText = "";
     recognition.start();
   }catch(e){
-    // Chrome can throw if already started. Try again shortly.
+    debug("Recognition start retry.");
     setTimeout(() => {
-      try{ recognition.start(); }catch(err){}
-    }, 500);
+      try{ recognition.start(); }catch(err){ debug("Start failed again: " + err.message); }
+    }, 450);
   }
 }
 
-function safelyStopRecognition(){
+function stopListeningSafely(){
   clearTimeout(listenTimer);
   clearTimeout(silenceTimer);
   if(recognition){
@@ -395,118 +610,158 @@ function safelyStopRecognition(){
   }
 }
 
-function startConversation(){
+function startRobot(){
+  $("startOverlay").classList.add("hidden");
   if(!initRecognition()) return;
-  isRunning = true;
+  running = true;
+  speaking = false;
   currentStep = 0;
   retryCount = 0;
-  $("log").innerHTML = "";
-  $("keyword").textContent = "—";
-  $("heard").textContent = "—";
-  askCurrentStep();
+  nameMemory = "my friend";
+  $("debug").textContent = "";
+  $("lastHeard").textContent = "—";
+  $("targetWord").textContent = "—";
+  scheduleBlink();
+  askStep();
 }
 
-function resetLesson(){
-  stopAll();
-  currentStep = 0;
-  retryCount = 0;
-  $("log").innerHTML = "";
-  $("task").textContent = "Press Start Robot.";
-  $("heard").textContent = "—";
-  $("keyword").textContent = "—";
-  $("robotStatus").textContent = "Idle";
-  $("micStatus").textContent = "Off";
-  setSignal("Ready", "idle");
-}
+function askStep(){
+  if(!running) return;
+  const step = lesson[currentStep];
+  if(!step) return;
 
-function stopAll(){
-  isRunning = false;
-  isSpeaking = false;
-  clearTimeout(listenTimer);
-  clearTimeout(silenceTimer);
-  if(recognition){ try{ recognition.abort(); }catch(e){} }
-  speechSynthesis.cancel();
-  $("robot").classList.remove("speaking","listening");
-  $("robotStatus").textContent = "Stopped";
-  $("micStatus").textContent = "Off";
-  setSignal("Stopped", "idle");
-}
+  $("targetWord").textContent = step.phrasal || step.kind;
 
-function askCurrentStep(){
-  const step = steps[currentStep];
-  $("task").textContent = step.robot;
-  $("keyword").textContent = step.phrasal ? step.phrasal : "Greeting / response";
-  if(step.type === "end"){
-    speak(step.robot, () => {
-      isRunning = false;
-      $("robotStatus").textContent = "Finished";
-      $("micStatus").textContent = "Off";
-      setSignal("✅ Finished", "speakNow");
+  if(step.kind === "end"){
+    speak(step.say, () => {
+      running = false;
+      setFace("idle","✅ FINISHED","Great job!");
     });
-  } else {
-    speak(step.robot);
+    return;
   }
+
+  if(step.auto){
+    speak(step.say, () => {
+      currentStep++;
+      setTimeout(askStep, 900);
+    });
+    return;
+  }
+
+  speak(step.say);
 }
 
-function handleStudentAnswer(raw){
-  if(!isRunning) return;
+function extractName(text){
+  let t = clean(text);
+  t = t.replace("my name is ","")
+       .replace("i am ","")
+       .replace("i'm ","")
+       .replace("name is ","")
+       .replace("this is ","")
+       .trim();
 
-  const text = normalize(raw);
-  $("heard").textContent = text || "No speech detected";
+  const parts = t.split(" ").filter(Boolean);
+  if(parts.length === 0) return "";
+  let candidate = parts[0];
+
+  if(["hello","hi","yes","no","fine","good","okay","ok"].includes(candidate)) return "";
+  return candidate.charAt(0).toUpperCase() + candidate.slice(1);
+}
+
+function processAnswer(raw){
+  if(!running) return;
+
+  const text = clean(raw);
+  $("lastHeard").textContent = text || "No speech detected.";
+  debug("Processing: " + (text || "EMPTY"));
+
+  const step = lesson[currentStep];
 
   if(!text){
     speak("I did not hear anything. Please try again.");
     return;
   }
 
-  logLine("studentLine", "Student: " + text);
-
-  const step = steps[currentStep];
-  let correct = false;
-  let found = "No target keyword found";
-
-  if(step.type === "phrasal"){
-    correct = text.includes(step.phrasal);
-    if(correct) found = step.phrasal;
-  } else {
-    correct = step.accept.some(word => text.includes(word));
-    if(correct) found = "Accepted response";
-  }
-
-  $("keyword").textContent = found;
-
-  if(correct){
-    retryCount = 0;
-    const response = step.success;
-    currentStep++;
-    speak(response + " " + (steps[currentStep]?.type !== "end" ? "Let us continue." : ""), () => {
-      setTimeout(askCurrentStep, 700);
-    });
-  } else {
-    retryCount++;
-    let response;
-    if(step.type === "phrasal"){
-      response = "I heard: " + text + ". Good speaking, but please use the phrasal verb " + step.phrasal + ". " + step.retry;
-    } else {
-      response = "I heard: " + text + ". " + step.retry;
-    }
-
-    // After 3 tries, gently move forward so the activity does not get stuck.
-    if(retryCount >= 3){
+  if(step.kind === "name"){
+    const name = extractName(text);
+    if(name){
+      nameMemory = name;
       retryCount = 0;
       currentStep++;
-      response += " Let's move to the next one.";
-      speak(response, () => setTimeout(askCurrentStep, 700));
+      speak("Nice to meet you, " + nameMemory + ".", () => setTimeout(askStep, 800));
     } else {
-      speak(response);
+      retryCount++;
+      speak(step.retry);
     }
+    return;
+  }
+
+  if(step.kind === "warmup"){
+    const okay = step.accept.some(w => text.includes(w));
+    if(okay || text.length > 2){
+      retryCount = 0;
+      currentStep++;
+      speak(step.success, () => setTimeout(askStep, 800));
+    } else {
+      retryCount++;
+      speak(step.retry);
+    }
+    return;
+  }
+
+  if(step.kind === "phrasal"){
+    const target = step.phrasal;
+    const correct = text.includes(target);
+    $("targetWord").textContent = target;
+
+    if(correct){
+      retryCount = 0;
+      currentStep++;
+      speak(step.success, () => setTimeout(askStep, 800));
+    } else {
+      retryCount++;
+      if(retryCount >= 3){
+        retryCount = 0;
+        currentStep++;
+        speak("Good try. The phrase was " + target + ". Let us continue.", () => setTimeout(askStep, 800));
+      } else {
+        speak(step.retry);
+      }
+    }
+    return;
   }
 }
 
-// Load voices on Chrome.
+function stopAll(){
+  running = false;
+  speaking = false;
+  speechSynthesis.cancel();
+  stopListeningSafely();
+  setFace("idle","STOPPED","Tap Reset or Start again.");
+}
+
+function resetRobot(){
+  stopAll();
+  $("startOverlay").classList.remove("hidden");
+  $("debug").textContent = "";
+  $("lastHeard").textContent = "—";
+  $("targetWord").textContent = "—";
+  setFace("idle","READY","Tap Start to meet RoboTalk.");
+}
+
+let holdTimer = null;
+$("teacherDot").addEventListener("pointerdown", () => {
+  holdTimer = setTimeout(() => {
+    $("teacherPanel").classList.toggle("show");
+  }, 3000);
+});
+$("teacherDot").addEventListener("pointerup", () => clearTimeout(holdTimer));
+$("teacherDot").addEventListener("pointerleave", () => clearTimeout(holdTimer));
+
 if("speechSynthesis" in window){
   speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
 }
+scheduleBlink();
 </script>
 </body>
 </html>
