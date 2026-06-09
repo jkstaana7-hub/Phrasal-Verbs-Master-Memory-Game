@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phrasal Verb Talking Robot - Sample</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #dff7ff, #f5e8ff);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #17324d;
+    }
+    .app {
+      width: min(1050px, 94vw);
+      min-height: 650px;
+      background: rgba(255,255,255,0.94);
+      border-radius: 28px;
+      box-shadow: 0 18px 45px rgba(40,70,120,0.18);
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 22px;
+    }
+    .left, .right {
+      border-radius: 24px;
+      padding: 22px;
+    }
+    .left {
+      background: linear-gradient(180deg, #ffffff, #eaf9ff);
+      text-align: center;
+      border: 3px solid #bdeeff;
+    }
+    .right {
+      background: #fff;
+      border: 3px solid #efe8ff;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    h1 { margin: 8px 0 6px; font-size: 30px; }
+    .subtitle { margin: 0 0 18px; font-size: 16px; color: #58708a; }
+    .robot {
+      width: 210px;
+      height: 250px;
+      margin: 12px auto 18px;
+      position: relative;
+    }
+    .antenna {
+      width: 8px; height: 35px; background: #4c69ff; margin: auto; border-radius: 8px;
+    }
+    .antenna:before {
+      content: ""; display: block; width: 24px; height: 24px; background: #ff7ab6;
+      border-radius: 50%; transform: translate(-8px, -18px);
+    }
+    .head {
+      width: 170px; height: 130px; background: #68d8ff; border: 6px solid #234a7d;
+      border-radius: 30px; margin: -2px auto 0; position: relative;
+    }
+    .eye {
+      width: 28px; height: 28px; background: #17324d; border-radius: 50%; position: absolute; top: 38px;
+    }
+    .eye.left-eye { left: 38px; }
+    .eye.right-eye { right: 38px; }
+    .mouth {
+      width: 76px; height: 16px; background: #17324d; border-radius: 0 0 20px 20px;
+      position: absolute; left: 47px; top: 84px;
+    }
+    .body {
+      width: 140px; height: 90px; background: #846bff; border: 6px solid #234a7d;
+      border-radius: 24px; margin: 8px auto 0; position: relative;
+    }
+    .body:before, .body:after {
+      content: ""; position: absolute; width: 36px; height: 12px; background: #234a7d; top: 24px;
+    }
+    .body:before { left: -38px; transform: rotate(-18deg); }
+    .body:after { right: -38px; transform: rotate(18deg); }
+    .light {
+      width: 20px; height: 20px; border-radius: 50%; background: #c9d3df; margin: 22px auto;
+      box-shadow: 0 0 0 rgba(255,122,182,0);
+    }
+    .listening .light {
+      background: #ff4f9a;
+      box-shadow: 0 0 22px rgba(255,79,154,.8);
+      animation: pulse 1s infinite;
+    }
+    @keyframes pulse { 50% { transform: scale(1.2); } }
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 14px 22px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      background: #4c69ff;
+      color: white;
+      box-shadow: 0 8px 18px rgba(76,105,255,.25);
+      margin: 5px;
+    }
+    button.secondary { background: #ff7ab6; }
+    button:disabled { background: #aeb8c8; cursor: not-allowed; box-shadow: none; }
+    .status {
+      padding: 14px;
+      border-radius: 18px;
+      background: #f2f7ff;
+      font-weight: bold;
+      text-align: center;
+      min-height: 50px;
+    }
+    .promptBox {
+      padding: 18px;
+      border-radius: 20px;
+      background: #f8f5ff;
+      border: 2px dashed #c8b9ff;
+      font-size: 22px;
+      line-height: 1.4;
+      min-height: 112px;
+    }
+    .heardBox {
+      padding: 14px;
+      border-radius: 18px;
+      background: #eafff3;
+      color: #145f36;
+      min-height: 54px;
+      font-size: 17px;
+    }
+    .lesson {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chip {
+      padding: 8px 12px;
+      background: #eef5ff;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .log {
+      flex: 1;
+      overflow-y: auto;
+      max-height: 230px;
+      padding: 12px;
+      border-radius: 18px;
+      background: #fafafa;
+      border: 1px solid #e7e7e7;
+      font-size: 15px;
+    }
+    .line { margin: 8px 0; }
+    .robotLine { color: #4c4cbb; font-weight: bold; }
+    .studentLine { color: #1f7a48; font-weight: bold; }
+    .note { font-size: 13px; color: #66788a; line-height: 1.4; }
+    @media (max-width: 850px) {
+      .app { grid-template-columns: 1fr; }
+      .robot { transform: scale(.9); margin-top: -10px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="left" id="robotPanel">
+      <h1>🤖 Robo Phrasal Talk</h1>
+      <p class="subtitle">A hands-free speaking practice robot</p>
+      <div class="robot">
+        <div class="antenna"></div>
+        <div class="head">
+          <div class="eye left-eye"></div>
+          <div class="eye right-eye"></div>
+          <div class="mouth"></div>
+        </div>
+        <div class="body"><div class="light"></div></div>
+      </div>
+      <button id="startBtn">Start Conversation</button>
+      <button id="stopBtn" class="secondary" disabled>Stop</button>
+      <p class="note">
+        Use Chrome. Allow microphone permission. After pressing Start, the robot will speak and listen automatically.
+      </p>
+    </section>
+
+    <section class="right">
+      <div class="status" id="status">Ready to start.</div>
+      <div class="promptBox" id="promptBox">Press Start Conversation.</div>
+      <div class="heardBox" id="heardBox">I heard: —</div>
+      <div class="lesson" id="lessonChips"></div>
+      <div class="log" id="log"></div>
+    </section>
+  </main>
+
+  <script>
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const synth = window.speechSynthesis;
+
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const statusEl = document.getElementById('status');
+    const promptBox = document.getElementById('promptBox');
+    const heardBox = document.getElementById('heardBox');
+    const logEl = document.getElementById('log');
+    const robotPanel = document.getElementById('robotPanel');
+    const lessonChips = document.getElementById('lessonChips');
+
+    const lessons = [
+      {
+        phrasal: 'wake up',
+        question: 'What time do you usually wake up?',
+        keywords: ['wake up', 'wakeup', 'morning', 'six', 'seven', 'eight'],
+        good: 'Nice! Wake up means to stop sleeping. For example, I wake up at six o’clock.'
+      },
+      {
+        phrasal: 'get up',
+        question: 'After you wake up, do you get up right away?',
+        keywords: ['get up', 'getup', 'right away', 'yes', 'no'],
+        good: 'Good answer! Get up means to leave your bed after waking up.'
+      },
+      {
+        phrasal: 'turn on',
+        question: 'What do you turn on in the morning?',
+        keywords: ['turn on', 'light', 'phone', 'computer', 'fan', 'tv'],
+        good: 'Great! Turn on means to start a machine, light, or device.'
+      },
+      {
+        phrasal: 'look for',
+        question: 'What do you usually look for before going to school?',
+        keywords: ['look for', 'bag', 'book', 'pencil', 'phone', 'shoes'],
+        good: 'Excellent! Look for means to try to find something.'
+      },
+      {
+        phrasal: 'put on',
+        question: 'What clothes do you put on before school?',
+        keywords: ['put on', 'shirt', 'uniform', 'shoes', 'socks', 'jacket'],
+        good: 'Very good! Put on means to wear clothes or accessories.'
+      }
+    ];
+
+    let recognition;
+    let currentStep = -1;
+    let studentName = '';
+    let active = false;
+
+    lessons.forEach(item => {
+      const chip = document.createElement('div');
+      chip.className = 'chip';
+      chip.textContent = item.phrasal;
+      lessonChips.appendChild(chip);
+    });
+
+    function addLog(who, text) {
+      const div = document.createElement('div');
+      div.className = 'line';
+      div.innerHTML = `<span class="${who === 'Robot' ? 'robotLine' : 'studentLine'}">${who}:</span> ${text}`;
+      logEl.appendChild(div);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function speak(text, afterSpeak) {
+      synth.cancel();
+      statusEl.textContent = 'Robot is speaking...';
+      promptBox.textContent = text;
+      addLog('Robot', text);
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      utterance.pitch = 1.1;
+      utterance.onend = () => {
+        if (active && afterSpeak) afterSpeak();
+      };
+      synth.speak(utterance);
+    }
+
+    function setupRecognition() {
+      if (!SpeechRecognition) {
+        statusEl.textContent = 'Speech recognition is not supported in this browser. Try Chrome.';
+        return null;
+      }
+      const rec = new SpeechRecognition();
+      rec.lang = 'en-US';
+      rec.interimResults = false;
+      rec.continuous = false;
+      rec.maxAlternatives = 1;
+
+      rec.onstart = () => {
+        robotPanel.classList.add('listening');
+        statusEl.textContent = 'Listening... please speak now.';
+      };
+
+      rec.onend = () => {
+        robotPanel.classList.remove('listening');
+      };
+
+      rec.onerror = () => {
+        robotPanel.classList.remove('listening');
+        if (active) speak('I did not hear clearly. Please try again.', listen);
+      };
+
+      rec.onresult = (event) => {
+        const text = event.results[0][0].transcript.toLowerCase().trim();
+        heardBox.textContent = 'I heard: ' + text;
+        addLog('Student', text);
+        handleStudentReply(text);
+      };
+      return rec;
+    }
+
+    function listen() {
+      if (!active || !recognition) return;
+      try {
+        recognition.start();
+      } catch (e) {
+        setTimeout(() => {
+          try { recognition.start(); } catch(err) {}
+        }, 500);
+      }
+    }
+
+    function handleStudentReply(text) {
+      if (currentStep === -1) {
+        studentName = text.replace(/my name is|i am|i'm|name is/gi, '').trim();
+        if (!studentName) studentName = 'my friend';
+        currentStep = 0;
+        speak(`Nice to meet you, ${studentName}. Today, we will practice phrasal verbs. Let's begin. ${lessons[0].question}`, listen);
+        return;
+      }
+
+      const item = lessons[currentStep];
+      const matched = item.keywords.some(k => text.includes(k));
+
+      let response;
+      if (matched) {
+        response = item.good;
+      } else if (text.includes('repeat') || text.includes('again')) {
+        speak('Sure. ' + item.question, listen);
+        return;
+      } else {
+        response = `Thank you. Try to use the phrasal verb ${item.phrasal}. For example, you can say, I ${item.phrasal} every day.`;
+      }
+
+      currentStep++;
+      if (currentStep < lessons.length) {
+        speak(`${response} Next question. ${lessons[currentStep].question}`, listen);
+      } else {
+        speak(`${response} Great job, ${studentName}! You practiced wake up, get up, turn on, look for, and put on. See you next time!`, stopConversation);
+      }
+    }
+
+    function startConversation() {
+      recognition = setupRecognition();
+      if (!recognition) return;
+      active = true;
+      currentStep = -1;
+      studentName = '';
+      logEl.innerHTML = '';
+      heardBox.textContent = 'I heard: —';
+      startBtn.disabled = true;
+      stopBtn.disabled = false;
+      speak('Hello! I am Robo Talk. I can listen and speak. What is your name?', listen);
+    }
+
+    function stopConversation() {
+      active = false;
+      synth.cancel();
+      if (recognition) {
+        try { recognition.stop(); } catch(e) {}
+      }
+      robotPanel.classList.remove('listening');
+      statusEl.textContent = 'Conversation stopped.';
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+    }
+
+    startBtn.addEventListener('click', startConversation);
+    stopBtn.addEventListener('click', stopConversation);
+  </script>
+</body>
+</html>
